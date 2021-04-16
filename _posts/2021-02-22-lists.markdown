@@ -1,5 +1,6 @@
 ---
 title: "Inaris Post"
+classes: wide
 categories:
   - blog
 tags:
