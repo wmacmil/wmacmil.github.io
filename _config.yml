@@ -19,7 +19,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   A site documenting my photography, art, and ideas about programming languages
   and mathematics.
 github_username: wmacmil
-minimal_mistakes_skin: dark
+minimal_mistakes_skin: neon
 search: true
 
 # Build settings
