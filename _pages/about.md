@@ -1,8 +1,10 @@
 ---
 permalink: /about/
-title: "About"
+title: "About Warrick"
 ---
 
-Tempor velit sint sunt ipsum tempor enim ad qui ullamco. Est dolore anim ad velit duis dolore minim sunt aliquip amet commodo labore. Ut eu pariatur aute ea aute excepteur laborum. Esse ea esse excepteur minim mollit qui cillum excepteur ex dolore magna. Labore deserunt fugiat incididunt incididunt sint ea. Consequat dolore aute laboris quis proident quis non et est consectetur ex eiusmod sit culpa.
+I'm a master's student finishing a degree in computational linguistics in Göteborg, Sverige (Gothenburg, Sweden). My research interests are both practically and theoretically oriented, with some optimism that the intersection between these two camps is larger than it may initially seem. Practical interests include : design and implementation of programming languages, parsing, the relation between natural and computer languages.  My theoretical inclinations touch upon type theory, category theory, and how these formalisms are related in the so-called doctrine of computational trinitarianism.
 
-Cupidatat ea do et in excepteur in. Ad nostrud ut est esse eu duis ea sunt eiusmod. Aliquip tempor veniam sint elit fugiat. Velit incididunt laboris amet incididunt labore dolore irure velit excepteur commodo deserunt laborum. Consectetur eu fugiat veniam veniam Lorem labore magna eiusmod. Ea occaecat reprehenderit pariatur consectetur minim labore ut aliquip.
+I have many passions outside the academy, although there's never time in a day to get to them. These include painting (oil and oil pastel), photography, digital fabrication, and music, generally. I'm additionally engaged with alternative ways of thinking about and realizing different social, political, and economic systems that aren't ecologically suicidal and where authority isn't so hierarchically oriented. An example in this direction would be Burning Man, prior to its embrace of a capitalist ethos (depending on when you define this having taken place - perhaps 1996, 2011, and 2014 are interesting years to consider).
+
+I'm always down to discuss any of the above topics, or a range of others, either digitally of physically. I'm always keen to meet new people, and indeed think all humans are infinitely interesting.

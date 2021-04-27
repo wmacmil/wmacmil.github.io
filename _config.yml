@@ -21,6 +21,9 @@ description: >- # this means to ignore newlines until "baseurl:"
 github_username: wmacmil
 minimal_mistakes_skin: dark
 search: true
+# teaser                   : /assets/images/500x300.png
+# logo                     : /assets/images/88x88.png
+
 
 # Build settings
 markdown: kramdown
@@ -61,7 +64,7 @@ plugins:
 
 author:
   name   : "Warrick Macmillan"
-  avatar : "/assets/images/bio-photo.jpg"
+  avatar : "/assets/images/front-thumb-me.jpeg"
   bio    : "Here I document some of the many interesting things I encounter and thoughts I have."
   links:
     - label: "Website"
