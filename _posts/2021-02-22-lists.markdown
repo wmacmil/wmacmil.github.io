@@ -8,6 +8,8 @@ tags:
   - Jekyll
   - update
   - gf
+toc: true
+toc_sticky: true
 ---
 
 
@@ -33,7 +35,7 @@ This post is about lists in GF. It's aimed for multiple audiences, so possibly s
 
 Quoting from the [GF book](http://www.grammaticalframework.org/gf-book/).
 
-#### C.4.3 List categories
+### C.4.3 List categories
 > Since categories of lists of elements of another category are a common idiom, the following syntactic sugar is available:
 > ```haskell
 > cat [C] {n}
@@ -48,7 +50,7 @@ Quoting from the [GF book](http://www.grammaticalframework.org/gf-book/).
 > The functions `BaseC` and `ConsC` are automatically generated in the abstract syntax, but their linearizations, as well as the linearization type of `ListC`,
 > must be defined manually. The type expression `[C]` is in all contexts interchangeable with `ListC`.
 
-### Choice of `n`
+## Choice of `n`
 
 The parameter `n` in `cat [C]{n}` determines the size of the base list. For instance,
 

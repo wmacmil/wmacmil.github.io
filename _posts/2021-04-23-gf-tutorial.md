@@ -1,5 +1,5 @@
 --- 
-title: "Grammtical Framework for the working Mathematician" 
+title: "Grammatical Framework for the working Mathematician" 
 excerpt: "An introduction to Grammatical Framework for a mathematically inclined audience" 
 tags: 
   - gf
@@ -10,20 +10,20 @@ toc_sticky: true
 
 # Introduction 
 
-For this inaugural blog-post, I will introduce Grammatical Framework (GF) through an extended example targeted at a general audience familiar with logic, functional programming, or mathematics. GF is a powerful tool for specifying grammars. A grammar specification in GF is actually an abstract syntax. With an abstract syntax specified, one can then define various linearization rules which compositionally evaluate to strings. An Abstract Syntax Tree (AST) may then be linearized to various strings admitted by different concrete syntaxes.  Conversely, given a string admitted by the language being defined, GF's powerful parser will generate all the ASTs which, linearize to that tree.
+For this inaugural blog-post, I will introduce Grammatical Framework (GF) through an extended example targeted at a general audience familiar with logic, functional programming, or mathematics. GF is a powerful tool for specifying grammars. A grammar specification in GF is actually an abstract syntax. With an abstract syntax specified, one can then define various linearization rules which compositionally evaluate to strings. An Abstract Syntax Tree (AST) may then be linearized to various strings admitted by different concrete syntaxes.  Conversely, given a string admitted by the language being defined, GF's powerful parser will generate all the ASTs which linearize to that tree.
 
 ## Focus of this tutorial
 
-We introduce this subject assuming no familiarity with GF, but a general mathematical and programming maturity. While GF is certainly geared to applications in domain specific machine translation, this writing will hopefully make evident that learning about GF, even without the intention of using it for its intented application, is a useful exercise in abstractly understanding syntax and its importance in just about any domain. 
+We introduce this subject assuming no familiarity with GF, but a general mathematical and programming maturity. While GF is certainly geared to applications in domain specific machine translation, this writing will hopefully make evident that learning about GF, even without the intention of using it for its intended application, is a useful exercise in abstractly understanding syntax and its importance in just about any domain. 
 
-A working high-level introduction of Grammatical Framework emaphasizing both theoretical and practical elements of GF, as well as their interplay. Specific things covered will be
+A working high-level introduction of Grammatical Framework emphasizing both theoretical and practical elements of GF, as well as their interplay. Specific things covered will be
 
 * Historical developments leading to the creation and discovery of the GF formalism
 * The difference between Abstract and Concrete Syntax, and the linearization and parsing functions between these two categories
-* The basic judgements : 
+* The basic judgments : 
   * Abstract : `cat, fun`
   * Concrete : `lincat, lin`
-  * Auxilliary : `oper, param`
+  * Auxiliary : `oper, param`
 * A library for building natural language applications with GF
     * The Resource Grammar Library (RGL)
 * A way of interfacing GF with Haskell and transforming ASTs externally
@@ -31,22 +31,22 @@ A working high-level introduction of Grammatical Framework emaphasizing both the
 * Module System and directory structure
 * A brief comparison with other tools like BNFC
 
-These topics will be understood via a simple example of an expression language, `Arith`, which will serve as a case study for understanding the many robust, theoretical topics metnioned above - indeed, mathematics is best understood and learned through examples. Possible exercises will be interspersed throughout, but per usual, the best exercises are the reader's own ideas, questions, and contentions which may arise while reading through this.
+These topics will be understood via a simple example of an expression language, `Arith`, which will serve as a case study for understanding the many robust, theoretical topics mentioned above - indeed, mathematics is best understood and learned through examples. Possible exercises will be interspersed throughout, but per usual, the best exercises are the reader's own ideas, questions, and contentions which may arise while reading through this.
 
 ## Some preliminary observations
 
-There are many ways to skin a cat. While in some sense GF offers the user a limited palatte with which to paint, she nonetheless has quite a bit of flexibility in her decision making when designing a GF grammar for a specific domain or application. These decisions are not binary, but rest in the spectrum of of considerations varying between : 
+There are many ways to skin a cat. While in some sense GF offers the user a limited palette with which to paint, she nonetheless has quite a bit of flexibility in her decision making when designing a GF grammar for a specific domain or application. These decisions are not binary, but rest in the spectrum of of considerations varying between : 
 
 * immediate usability and long term sustainability
-* protyping and production readiness
-* depenency on external resources liable to change
+* prototyping and production readiness
+* dependency on external resources liable to change
 * research or application oriented
 * sensitivity and vulnerability to errors
 * scalability and maintainability 
 
 Many answers to where on the spectrum a Grammar lies will only become clear a posteriori to code being written, which often contradicts prior decisions which had been made and requires significant efforts to refactor. General best practices that apply to all programming languages, like effective use of modularity, can and should be applied by the GF programmer out of the box, whereas the strong type system also promotes a degree of rigidity with which the programmer is forced to stay in a certain safety boundary. Nonetheless, a grammar is in some sense a really large program, which brings a whole series of difficulties. 
 
-When designing a GF grammar for a given application, the most immediate question that will come to mind is seperation of concerns as regards the spectrum of 
+When designing a GF grammar for a given application, the most immediate question that will come to mind is separation of concerns as regards the spectrum of 
 
 [Abstract <-> Concrete] sytnax
 
