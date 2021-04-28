@@ -62,7 +62,7 @@ gallery1:
 
   In The Library of Babel, Jorge Borges explores fundamental questions surrounding language and literature; additionally, he explores the paradox's of apparent human finitude in an infinite space and time.  In 2014 we built an art installation as an homage to this epic story by placing a bunch of empty, handmade books into a Library in the middle of the desert a few thousand feet from a hundred foot tall man which would soon be incenerated.  I intend this page can be used as some form of documentation, a mini-wiki for a project with tens of thousands of hours invested into its initial and so far only debut.  Indeed, the DiSorient wiki is an inspiration for my own attept at an in depth look at this project.  I hope we can get many more photos of it, and eventually raise some money to archive the remaning materials.  It would be nice to try to create a permanent installation somewhere as well.
 
-  I applied for and recieved a Burning Man Grant for 115,000. A bunch of 20 year old kids from Reno formed the primary crew.  Along with some mentors and well over a hundred volunteers, we were able to in 4 months build a 45 foot wooden structure with 400 handmade books to accompany it.  There were, I suspect, well over 10,000 hours of time that went directly into building this Library.
+  I applied for and recieved a Burning Man Grant for $15,000. A bunch of 20 year old kids from Reno formed the primary crew.  Along with some mentors and well over a hundred volunteers, we were able to in 4 months build a 45 foot wooden structure with 400 handmade books to accompany it.  There were, I suspect, well over 10,000 hours of time that went directly into building this Library.
 
 ##  Structure
 
@@ -97,6 +97,16 @@ We cut angle jigs as well as inserted extra angled 2x4s to be able to attach the
 ## Images
 
 
-{% include gallery caption="Horizontal Photos" %}
+{% include gallery %}
 
-{% include gallery id="gallery1"  caption="Vertical Gallery" %}
+{% include gallery id="gallery1" %}
+
+## External References & Press Coverage
+
+* [Kickstarter](https://www.kickstarter.com/projects/2044825291/library-of-babel-burning-man-2014-0)
+* [Github](https://github.com/wmacmil/LibraryofBabel)
+* [Facebook](https://www.facebook.com/The-Library-of-Babel-264878500350354/)
+* [Article by Affinity @ Burning Man Org](https://journal.burningman.org/2014/07/philosophical-center/tenprinciples/the-generator-a-community-art-and-builders-space/)
+* Coverage from a local Reno news broadcaster
+  * [Article](http://www.ktvn.com/story/25883253/artists-creating-the-library-of-babel-for-burning-man-1)
+  * [Video](https://www.youtube.com/watch?v=57OwmqMfc_4)
