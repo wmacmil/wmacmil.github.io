@@ -111,4 +111,4 @@ We cut angle jigs as well as inserted extra angled 2x4s to be able to attach the
   * [Article](http://www.ktvn.com/story/25883253/artists-creating-the-library-of-babel-for-burning-man-1)
   * [Video](https://www.youtube.com/watch?v=57OwmqMfc_4)
 * [burners.me coverage](https://burners.me/2014/07/01/catch-up-on-some-light-reading/)
-* [Burning Man Honorarium Listing] (https://burningman.org/timeline/#LibraryofBabel)
+* [Burning Man Honorarium Listing](https://burningman.org/timeline/#LibraryofBabel)
