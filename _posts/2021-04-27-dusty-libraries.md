@@ -1,20 +1,20 @@
 ---
 title: "Libraries in the Dust"
+excerpt: "A description of The Library of Babel, a Burning Man art installation in 2014"
+author_profile: false
 categories:
-  - Post Formats
+  - Personal Blog
 tags:
-  - gallery
-  - Post Formats
-  - tiled
+  - Gallery
+  - Burning Man
+tagline: "Paying homage to Jorge Borges' The Library of Babel , this installation explores the infinite creativity of humanity and our language"
+header:
+  overlay_image: /assets/images/one.jpg
 gallery:
   - url: /assets/images/exteriorsunset.jpg
     image_path: /assets/images/exteriorsunset-th.jpg
     alt: "exteriorsunset"
     title: "exteriorsunset"
-  - url: /assets/images/childBurner.jpg
-    image_path: /assets/images/childBurner-th.jpg
-    alt: "childBurner"
-    title: "childBurner"
   - url: /assets/images/burnerWithBook.jpg
     image_path: /assets/images/burnerWithBook-th.jpg
     alt: "burnerWithBook"
@@ -31,10 +31,6 @@ gallery:
     image_path: /assets/images/interiorpeoplesittingday-th.jpg
     alt: "interiorpeoplesittingday"
     title: "interiorpeoplesittingday"
-  - url: /assets/images/one.jpg
-    image_path: /assets/images/one-th.jpg
-    alt: "one"
-    title: "one"
   - url: /assets/images/intNightWide.jpg
     image_path: /assets/images/intNightWide-th.jpg
     alt: "intNightWide"
@@ -51,25 +47,23 @@ gallery:
     image_path: /assets/images/lamps-th.jpg
     alt: "lamps"
     title: "lamps"
+gallery1:
+  - url: /assets/images/lamps.jpg
+    image_path: /assets/images/lamps-th.jpg
+    alt: "lamps"
+    title: "lamps"
+  - url: /assets/images/childBurner.jpg
+    image_path: /assets/images/childBurner-th.jpg
+    alt: "childBurner"
+    title: "childBurner"
+  - url: /assets/images/burnerWithBook.jpg
+    image_path: /assets/images/burnerWithBook-th.jpg
+    alt: "burnerWithBook"
+    title: "burnerWithBook"
   - url: /assets/images/booksOnTable.jpg
     image_path: /assets/images/booksOnTable-th.jpg
     alt: "booksOnTable"
     title: "booksOnTable"
-gallery2:
-  - url: https://flic.kr/p/8a6Ven
-    image_path: https://farm2.staticflickr.com/1272/4697500467_8294dac099_q.jpg
-    alt: "Black and grays with a hint of green"
-  - url: https://flic.kr/p/8a738X
-    image_path: https://farm5.staticflickr.com/4029/4697523701_249e93ba23_q.jpg
-    alt: "Made for open text placement"
-  - url: https://flic.kr/p/8a6VXP
-    image_path: https://farm5.staticflickr.com/4046/4697502929_72c612c636_q.jpg
-    alt: "Fog in the trees"
-gallery3:
-  - image_path: /assets/images/unsplash-gallery-image-2-th.jpg
-    alt: "placeholder image 2"
-  - image_path: /assets/images/unsplash-gallery-image-4-th.jpg
-    alt: "placeholder image 4"
 ---
 
 ##  Overview
@@ -110,31 +104,6 @@ We cut angle jigs as well as inserted extra angled 2x4s to be able to attach the
 
 #Cutoff
 
-
-These are gallery tests for image wrapped in `<figure>` elements.
-
-To place a gallery add the necessary YAML Front Matter:
-
-```yaml
-gallery:
-  - url: /assets/images/unsplash-gallery-image-1.jpg
-    image_path: /assets/images/unsplash-gallery-image-1-th.jpg
-    alt: "placeholder image 1"
-    title: "Image 1 title caption"
-  - url: /assets/images/unsplash-gallery-image-2.jpg
-    image_path: /assets/images/unsplash-gallery-image-2-th.jpg
-    alt: "placeholder image 2"
-    title: "Image 2 title caption"
-  - url: /assets/images/unsplash-gallery-image-3.jpg
-    image_path: /assets/images/unsplash-gallery-image-3-th.jpg
-    alt: "placeholder image 3"
-    title: "Image 3 title caption"
-  - url: /assets/images/unsplash-gallery-image-4.jpg
-    image_path: /assets/images/unsplash-gallery-image-4-th.jpg
-    alt: "placeholder image 4"
-    title: "Image 4 title caption"
-```
-
 And then drop-in the gallery include --- gallery `caption` is optional.
 
 ```liquid
@@ -147,30 +116,10 @@ This is some text after the gallery just to make sure that everything aligns pro
 
 Here comes another gallery, this time set the `id` to match 2nd gallery hash in YAML Front Matter.
 
-```yaml
-gallery2:
-  - url: https://flic.kr/p/8a6Ven
-    image_path: https://farm2.staticflickr.com/1272/4697500467_8294dac099_q.jpg
-    alt: "Black and grays with a hint of green"
-  - url: https://flic.kr/p/8a738X
-    image_path: https://farm5.staticflickr.com/4029/4697523701_249e93ba23_q.jpg
-    alt: "Made for open text placement"
-  - url: https://flic.kr/p/8a6VXP
-    image_path: https://farm5.staticflickr.com/4046/4697502929_72c612c636_q.jpg
-    alt: "Fog in the trees"
-```
-
-And place it like so: 
-
-```liquid
-{% raw %}{% include gallery id="gallery2" caption="This is a second gallery example with images hosted externally." %}{% endraw %}
-```
-
-{% include gallery id="gallery2" caption="This is a second gallery example with images hosted externally." %}
-
 And for giggles one more gallery just to make sure this works. To fill page content container add `class="full"`.
 
-{% include gallery id="gallery3" class="full" caption="This is a third gallery example with two images and fills the entire content container." %}
+
+{% include gallery id="gallery" class="full" caption="Full width gallery with **Markdown support**." %}
 
 Gallery column layout can be overrided by setting a `layout`.
 
