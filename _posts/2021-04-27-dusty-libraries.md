@@ -15,10 +15,6 @@ gallery:
     image_path: /assets/images/exteriorsunset-th.jpg
     alt: "exteriorsunset"
     title: "exteriorsunset"
-  - url: /assets/images/burnerWithBook.jpg
-    image_path: /assets/images/burnerWithBook-th.jpg
-    alt: "burnerWithBook"
-    title: "burnerWithBook"
   - url: /assets/images/altNightInt.jpg
     image_path: /assets/images/altNightInt-th.jpg
     alt: "altNightInt"
@@ -31,10 +27,6 @@ gallery:
     image_path: /assets/images/interiorpeoplesittingday-th.jpg
     alt: "interiorpeoplesittingday"
     title: "interiorpeoplesittingday"
-  - url: /assets/images/intNightWide.jpg
-    image_path: /assets/images/intNightWide-th.jpg
-    alt: "intNightWide"
-    title: "intNightWide"
   - url: /assets/images/nightAgain.jpg
     image_path: /assets/images/nightAgain-th.jpg
     alt: "nightAgain"
@@ -43,11 +35,11 @@ gallery:
     image_path: /assets/images/peopleAtCorner-th.jpg
     alt: "peopleAtCorner"
     title: "peopleAtCorner"
-  - url: /assets/images/lamps.jpg
-    image_path: /assets/images/lamps-th.jpg
-    alt: "lamps"
-    title: "lamps"
 gallery1:
+  - url: /assets/images/intNightWide.jpg
+    image_path: /assets/images/intNightWide-th.jpg
+    alt: "intNightWide"
+    title: "intNightWide"
   - url: /assets/images/lamps.jpg
     image_path: /assets/images/lamps-th.jpg
     alt: "lamps"
@@ -102,29 +94,9 @@ We cut angle jigs as well as inserted extra angled 2x4s to be able to attach the
 
   Originally, I had envisaged a Library adopting the exactitude explicated in Borges' rigid description.  However, I soon met Rory, an artist whose craft is paper, and the decision was made to bind our own hand-made books out of recycled materials.  We hoped to reinspire the act of writing itself, with words from telephone books, junk mail, and sometimes even the drafts of the library a priori embdedded in the pages.  The act of writing on top of scrambled, nonlinear chunks of source material was provided the space with its own infinite interpretation and develop, despite being only a single hexagonal room.
 
-#Cutoff
-
-And then drop-in the gallery include --- gallery `caption` is optional.
-
-```liquid
-{% raw %}{% include gallery caption="This is a sample gallery with **Markdown support**." %}{% endraw %}
-```
-
-{% include gallery caption="This is a sample gallery with **Markdown support**." %}
-
-This is some text after the gallery just to make sure that everything aligns properly.
-
-Here comes another gallery, this time set the `id` to match 2nd gallery hash in YAML Front Matter.
-
-And for giggles one more gallery just to make sure this works. To fill page content container add `class="full"`.
+## Images
 
 
-{% include gallery id="gallery" class="full" caption="Full width gallery with **Markdown support**." %}
+{% include gallery caption="Horizontal Photos" %}
 
-Gallery column layout can be overrided by setting a `layout`.
-
-```liquid
-{% raw %}{% include gallery id="gallery" layout="half" caption="This is a half gallery layout example." %}{% endraw %}
-```
-
-{% include gallery id="gallery" layout="half" caption="This is a half gallery layout example." %}
+{% include gallery id="gallery1"  caption="Vertical Gallery" %}
