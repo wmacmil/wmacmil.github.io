@@ -114,21 +114,22 @@ Have your cake and eat it ?
 
 ## Judgments
 
-A central contribution of Per Martin-Löf in the development of type theory was the recognition of the centrality of judgments in logic. Many mathematicians aren't familiar with the spectrum of judgments available, and merely believe they are concerned with *the* notion of truth, namely *the truth* of a mathematical proposition or theorem. However, there are many judgments one can make which most mathematicians aren't aware of or never mention.  The include, for instance,
+A central contribution of Per Martin-Löf in the development of type theory was the recognition of the centrality of judgments in logic. Many mathematicians aren't familiar with the spectrum of judgments available, and merely believe they are concerned with *the* notion of truth, namely *the truth* of a mathematical proposition or theorem. There are many judgments one can make which most mathematicians aren't aware of or at least never mention.  These include, for instance,
 
 * $$A$$ is a proposition
 * $$A$$ is possible
 * $$A$$ is probable
 
-These are judgments are understood not in the object language in which we state our propositions, possibilities, or probabilities, but as assertions in the metalanguage which require evidence for us to know and believe them. Most mathematicians may reach for their wallets if I come in and give a talk saying it is possible that the Riemann Hypothesis is true, partially because they already know that, and partially because it doesn't seem particularly interesting to say that something is possible, in the same way that a physicist may flinch if you say alchemy is possible. 
+These judgments are understood not in the object language in which we state our propositions, possibilities, or probabilities, but as assertions in the metalanguage which require evidence for us to know and believe them. Most mathematicians may reach for their wallets if I come in and give a talk saying it is possible that the Riemann Hypothesis is true, partially because they already know that, and partially because it doesn't seem particularly interesting to say that something is possible, in the same way that a physicist may flinch if you say alchemy is possible. Most mathematicians, however, would agree that $$P = NP$$ is possible but isn't probable.
 
-Nonetheless, for the logician these may well be interesting because their may be logics in which the discussion of possibility or probability is even more interesting than the discussion of truth. And for the type theorist, interested in designing and building programming languages over many various logics, these judgments become a prime focus. The four main judgments of 
-
+For the logician these judgments may well be interesting because their may be logics in which the discussion of possibility or probability is even more interesting than the discussion of truth. And for the type theorist, interested in designing and building programming languages over many various logics, these judgments become a prime focus. The role of the type-checker in a programming language is to present evidence for, or decide the validity of the judgments. The four main judgments of type theory are :
 
 * $$T$$ is a type
 * $$T$$ and $$T'$$ are equal types
 * $$t$$ is a term of type $$T$$
 * $$t$$ and $$t'$$ are equal terms of type $$T$$
+
+We succinctly present these in a mathematical notation where Frege's turnstile, $$\vdash$$, denotes a judgment : 
 
 $$\vdash T \; {\rm type}$$
 
@@ -138,8 +139,20 @@ $$\vdash t {:} T$$
 
 $$\vdash t = t' {:} T$$
 
-While
+These judgments become much more interesting when we add the ability for them to be interpreted in a some context with judgment hypotheses. Given a series of judgments $$J_1,...,J_n$$, denoted $$\Gamma$$, where $$J_i$$ can depend on previously listed $$J's$$, we can make judgment $$J$$ under the hypotheses, e.g. $$J_1,...,J_n \vdash J$$. Often these hypotheses $$J_i$$, alternatively called *antecedents*, denote variables which may occur freely in the *consequent* judgment $$J$$. For instance, the antecedent, $$x {:} \R$$ occurs freely in the syntactic expression $$\sin x$$, a which is given meaning in the judgment $$\vdash \sin x {:} \R$$. We write our hypothetical judgement as follows :
 
+$$x {:} \R \vdash \sin x {:} \R$$
+
+One reason why hypothetical judgments are so interesting is we can devise rules which allow us to translate from the metalanguage to the object language using lambda expressions. These play the role of a function in mathematics and implication in logic. This comes out in the following introduction rule : 
+
+$$
+\frac{\Gamma, x {:} A \vdash b {:} B}
+{\Gamma \vdash \lambda x. b {:}  A \rightarrow B}
+$$
+
+Using this rule, we now see a typical non-hypotetical judgment from real analysis,
+
+$$x {:} \R \vdash \lambda x. \sin x {:} \R \rightarrow \R$$
 
 ### Abstract Judgments
 
