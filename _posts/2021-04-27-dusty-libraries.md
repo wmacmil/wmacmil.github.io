@@ -103,8 +103,9 @@ We cut angle jigs as well as inserted extra angled 2x4s to be able to attach the
 
 ## External References & Press Coverage
 
-* [Kickstarter](https://www.kickstarter.com/projects/2044825291/library-of-babel-burning-man-2014-0)
 * [Github](https://github.com/wmacmil/LibraryofBabel)
+  * includes art grant, rhino, autocad files, illustrator designs, and more
+* [Kickstarter](https://www.kickstarter.com/projects/2044825291/library-of-babel-burning-man-2014-0)
 * [Facebook](https://www.facebook.com/The-Library-of-Babel-264878500350354/)
 * [Article by Affinity @ Burning Man Org](https://journal.burningman.org/2014/07/philosophical-center/tenprinciples/the-generator-a-community-art-and-builders-space/)
 * Coverage from a local Reno news broadcaster

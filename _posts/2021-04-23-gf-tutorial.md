@@ -1,80 +1,41 @@
---- 
-title: "Grammatical Framework for the working Mathematician" 
-excerpt: "An introduction to Grammatical Framework for a mathematically inclined audience" 
-tags: 
+---
+title: "Grammatical Framework for the working Mathematician"
+excerpt: "An introduction to Grammatical Framework for a mathematically inclined audience"
+tags:
   - gf
-  - syntax highlighting 
-toc: true 
+  - syntax highlighting
+toc: true
 toc_sticky: true
 ---
 
-# Introduction 
+# Introduction
 
 For this inaugural blog-post, I will introduce Grammatical Framework (GF) through an extended example targeted at a general audience familiar with logic, functional programming, or mathematics. GF is a powerful tool for specifying grammars. A grammar specification in GF is actually an abstract syntax. With an abstract syntax specified, one can then define various linearization rules which compositionally evaluate to strings. An Abstract Syntax Tree (AST) may then be linearized to various strings admitted by different concrete syntaxes.  Conversely, given a string admitted by the language being defined, GF's powerful parser will generate all the ASTs which linearize to that tree.
 
 ## Focus of this tutorial
 
-We introduce this subject assuming no familiarity with GF, but a general mathematical and programming maturity. While GF is certainly geared to applications in domain specific machine translation, this writing will hopefully make evident that learning about GF, even without the intention of using it for its intended application, is a useful exercise in abstractly understanding syntax and its importance in just about any domain. 
+We introduce this subject assuming no familiarity with GF, but a general mathematical and programming maturity. While GF is certainly geared to applications in domain specific machine translation, this writing will hopefully make evident that learning about GF, even without the intention of using it for its intended application, is a useful exercise in abstractly understanding syntax and its importance in just about any domain.
 
 A working high-level introduction of Grammatical Framework emphasizing both theoretical and practical elements of GF, as well as their interplay. Specific things covered will be
 
 * Historical developments leading to the creation and discovery of the GF formalism
 * The difference between Abstract and Concrete Syntax, and the linearization and parsing functions between these two categories
-* The basic judgments : 
+* The basic judgments :
   * Abstract : `cat, fun`
   * Concrete : `lincat, lin`
   * Auxiliary : `oper, param`
 * A library for building natural language applications with GF
     * The Resource Grammar Library (RGL)
-* A way of interfacing GF with Haskell and transforming ASTs externally
+    * A way of interfacing GF with Haskell and transforming ASTs externally
     * The Portable Grammar Format (PGF)
 * Module System and directory structure
 * A brief comparison with other tools like BNFC
 
 These topics will be understood via a simple example of an expression language, `Arith`, which will serve as a case study for understanding the many robust, theoretical topics mentioned above - indeed, mathematics is best understood and learned through examples. Possible exercises will be interspersed throughout, but per usual, the best exercises are the reader's own ideas, questions, and contentions which may arise while reading through this.
 
-## Some preliminary observations
+# Theoretical Overview
 
-There are many ways to skin a cat. While in some sense GF offers the user a limited palette with which to paint, she nonetheless has quite a bit of flexibility in her decision making when designing a GF grammar for a specific domain or application. These decisions are not binary, but rest in the spectrum of of considerations varying between : 
-
-* immediate usability and long term sustainability
-* prototyping and production readiness
-* dependency on external resources liable to change
-* research or application oriented
-* sensitivity and vulnerability to errors
-* scalability and maintainability 
-
-Many answers to where on the spectrum a Grammar lies will only become clear a posteriori to code being written, which often contradicts prior decisions which had been made and requires significant efforts to refactor. General best practices that apply to all programming languages, like effective use of modularity, can and should be applied by the GF programmer out of the box, whereas the strong type system also promotes a degree of rigidity with which the programmer is forced to stay in a certain safety boundary. Nonetheless, a grammar is in some sense a really large program, which brings a whole series of difficulties. 
-
-When designing a GF grammar for a given application, the most immediate question that will come to mind is separation of concerns as regards the spectrum of 
-
-[Abstract <-> Concrete] sytnax
-
-GF is supposed to be used with 
-
-A lot of these difficulties arise from the fact 
-
-
-Here are some examples which come to mind
-
-
-
-A 
-
-
-Perhaps 
-
-
-Have your cake and eat it ?
-
-The 
-
-GF forces the user 
-
-[Abstract <-> Concrete] sytnax
-
-# Technical Overview
-
+## What is a GF grammar ?
 
 Consider a language L, for now given a single linear presentation C^L_0, where AST_L String_L0 denote the sets GF ASTs and Strings in the languages generated by the rules of L's abstract syntax and L0s compositional representation.
 
@@ -86,69 +47,123 @@ with the important property that given a string s,
 
 And given an AST a, we can Parse . Linearize a belongs to {AST}
 
-
 Now we should explore why the linearizations are interesting. In part, this is because they have arisen from the role of grammars have played in the intersection and interaction between computer science and linguistics at least since Chomsky in the 50s, and they have different understandings and utilities in the respective disciplines. These two discplines converge in GF, which allows us to talk about natural languages (NLs) from programming languages (PLs) perspective. GF captures languages more expressive than Chomsky's Context Free Grammars (CFGs) but is still decideable with parsing in (cubic?) polynomial time, which means it still is quite domain specific and leaves a lot to be desired as far as turing complete languages or those capable of general recursion are concerned.
 
 We can should note that computa
 
   given a string s , perhaps a phrase map Linearize (Parse s)
-  
+
 is understood as the set of translations of a phrase of one language to possibly grammatical phrases in the other languages connected by a mutual abstract syntax. So we could denote these L^English, L^Bantu, L^Swedish for L^Englsih_American vs L^Englsih_English or L^Bantu_i with i being any one of the Bantu languages a hypothetical set of linguists and grammar writers may want to implement, on a given fragment of abstract syntax, with various domain applications, as determined by L, in mind.
 
-  One could also further elaborate these L^English_0 L^English_1 to varying degrees of granularity, like L^English_Chomsky L^English_Partee because Chomsky may something like "I was stoked" and Partee may only say something analogous "I was really excited" or whatever the individual nuances come with how speakers say what they mean with different surface syntax, and also 
+  One could also further elaborate these L^English_0 L^English_1 to varying degrees of granularity, like L^English_Chomsky L^English_Partee because Chomsky may something like "I was stoked" and Partee may only say something analogous "I was really excited" or whatever the individual nuances come with how speakers say what they mean with different surface syntax, and also
 
   L_0 < L_1 -> L_English_0 < L_English_1
 
 But this would be similair to a set of expressions translateable between programming languages, like Logic^English, Logic^Latex, Logic^Agda, Logic^Coq, etc
 
+where one could extend the
 
+Logic_Core^English Logic_Extended^English
 
-where one could extend the 
-
-Logic_Core^English Logic_Extended^English 
-
-whereas in the PL domain 
+whereas in the PL domain
 
 Logic_Core^Agda Logic_Extended^Agda may collapse at certain points, but also in some ways extend beyond our Languages capacities (we can make machine code only machines can understand, not us)
 
 or Mathematics = Logic + domain specific Mathematics^English Mathematics^Agda
 
-where we could have further refinements, via, for instance, the module system, the concrete and linear designs like 
+where we could have further refinements, via, for instance, the module system, the concrete and linear designs like
 
-Mathematics^English iI -- Something about 
+Mathematics^English iI -- Something about
 
-  The Functor (in the module sense familiar to ML programmers) 
+  The Functor (in the module sense familiar to ML programmers)
 
-  break down to different classifications of 
+  break down to different classifications of
 
--- Something about 
+-- Something about
 
-  The Functor (in the module sense familiar to ML programmers) 
+  The Functor (in the module sense familiar to ML programmers)
 
-  break down to different classifications of 
+  break down to different classifications of
 
-  The indexes here, while seemingly arbitrary, 
+  The indexes here, while seemingly arbitrary,
 
-  One could also further elaborate these L^English_0 L^English_1 to varying degrees of granularity, like L^English_Chomsky L^English_Partee 
+  One could also further elaborate these L^English_0 L^English_1 to varying degrees of granularity, like L^English_Chomsky L^English_Partee
 
-  because Chomsky may something like "I was stoked" and Partee may only say something analogous "I was really excited" or whatever the individual nuances come with how speakers say what they mean with different surface syntax, and also 
+  because Chomsky may something like "I was stoked" and Partee may only say something analogous "I was really excited" or whatever the individual nuances come with how speakers say what they mean with different surface syntax, and also
+
+## Some preliminary observations and considerations
+
+There are many ways to skin a cat. While in some sense GF offers the user a limited palette with which to paint, she nonetheless has quite a bit of flexibility in her decision making when designing a GF grammar for a specific domain or application. These decisions are not binary, but rest in the spectrum of of considerations varying between :
+
+* immediate usability and long term sustainability
+* prototyping and production readiness
+* dependency on external resources liable to change
+* research or application oriented
+* sensitivity and vulnerability to errors
+* scalability and maintainability
+
+Many answers to where on the spectrum a Grammar lies will only become clear a posteriori to code being written, which often contradicts prior decisions which had been made and requires significant efforts to refactor. General best practices that apply to all programming languages, like effective use of modularity, can and should be applied by the GF programmer out of the box, whereas the strong type system also promotes a degree of rigidity with which the programmer is forced to stay in a certain safety boundary. Nonetheless, a grammar is in some sense a really large program, which brings a whole series of difficulties.
+
+When designing a GF grammar for a given application, the most immediate question that will come to mind is separation of concerns as regards the spectrum of
+
+[Abstract <-> Concrete] sytnax
+
+Have your cake and eat it ?
+
+# A grammar for basic arithmetic
+
+## Judgments
+
+A central contribution of Per Martin-Löf in the development of type theory was the recognition of the centrality of judgments in logic. Many mathematicians aren't familiar with the spectrum of judgments available, and merely believe they are concerned with *the* notion of truth, namely *the truth* of a mathematical proposition or theorem. However, there are many judgments one can make which most mathematicians aren't aware of or never mention.  The include, for instance,
+
+* $$A$$ is a proposition
+* $$A$$ is possible
+* $$A$$ is probable
+
+These are judgments are understood not in the object language in which we state our propositions, possibilities, or probabilities, but as assertions in the metalanguage which require evidence for us to know and believe them. Most mathematicians may reach for their wallets if I come in and give a talk saying it is possible that the Riemann Hypothesis is true, partially because they already know that, and partially because it doesn't seem particularly interesting to say that something is possible, in the same way that a physicist may flinch if you say alchemy is possible. 
+
+Nonetheless, for the logician these may well be interesting because their may be logics in which the discussion of possibility or probability is even more interesting than the discussion of truth. And for the type theorist, interested in designing and building programming languages over many various logics, these judgments become a prime focus. The four main judgments of 
+
+
+* $$T$$ is a type
+* $$T$$ and $$T'$$ are equal types
+* $$t$$ is a term of type $$T$$
+* $$t$$ and $$t'$$ are equal terms of type $$T$$
+
+$$\vdash T \; {\rm type}$$
+
+$$\vdash T = T'$$
+
+$$\vdash t {:} T$$
+
+$$\vdash t = t' {:} T$$
+
+While
+
+
+### Abstract Judgments
 
 
 
-
-
-
+```haskell
 cat Exp ; Var ;
 
-fun Add  : Exp -> Exp -> Exp ; Mul  : Exp -> Exp -> Exp ; EInt : Int -> Exp ;
+fun
+  Add  : Exp -> Exp -> Exp ;
+  Mul  : Exp -> Exp -> Exp ;
+  EInt : Int -> Exp ;
+```
 
-Given a set of categories,  we define the functions \phi : (c_1, ..., c_n) -> c_t over the categories which will serve as the constructors of our ASTs. The categories and functions are denoted in GF with the cat and fun judgement.
+We have to
 
-The most important properties of the functions 
+Given a set of categories,  we define the functions \phi : (c_1, ..., c_n) -> c_t over the categories which will serve as the constructors of our ASTs. The categories and functions are denoted in GF with the cat and fun judgment.
 
+The most important properties of the functions
 
+# Appendix : Historical Developments
 
--- Prelude, or appendix
+Prehistory :
 
-Prehistory : 
+CFGs, Chomsky Hierarchy, BNF
 
+Natural Language Semantics & Martin Lof Type Theory :
