@@ -178,7 +178,7 @@ abstract Arith = {
 }
 ```
 
-**.gf :** All GF files end with the `.gf` file extension. More detailed information about abstract, concrete, modules, etc. relevant for GF is specified internal to a `*.gf` file
+**Note :** All GF files end with the `.gf` file extension. More detailed information about abstract, concrete, modules, etc. relevant for GF is specified internal to a `*.gf` file
 {: .notice--info}
 
 The abstract specification is simple, and reveals GF's power and elegance. The two primary abstract judgments are :
@@ -242,7 +242,7 @@ While there was an equivalence suggested Haskell ADTs should be careful not to t
 
 #### Arith.gf
 
-Below we capitulate, for completeness, the whole `Arith.gf` file with all the pieces from above glued together, which, the reader should start to play with. 
+Below we recapitulate, for completeness, the whole `Arith.gf` file with all the pieces from above glued together, which, the reader should start to play with. 
 
 ```haskell
 abstract Arith = {
@@ -263,7 +263,7 @@ fun
 
 The astute reader will recognize some code which has not yet been described.  The comments, delegated with `--`, can have their own lines or be given at the end of a piece of code. It is good practice to give example linearizations as comments in the abstract syntax file, so that it can be read in a stand-alone way. 
 
-The `flags startcat = Exp ;` line is not a judgment, but piece of metadata for the compiler so that it knows, when generating random ASTs, to include a function at the root of the AST with codomain `Exp`. If I hadn't included `flags startcat = *some cat*` , and ran `gr` in the gf shell, we would get the following error, which can be incredibly confusing but simple bug to fix if you don't know what to look for!
+The `flags startcat = Exp ;` line is not a judgment, but piece of metadata for the compiler so that it knows, when generating random ASTs, to include a function at the root of the AST with codomain `Exp`. If I hadn't included `flags startcat = *some cat*` , and ran `gr` in the gf shell, we would get the following error, which can be incredibly confusing but simple bug to fix if you know what to look for!
 
 ```haskell
 Category S is not in scope
@@ -273,8 +273,61 @@ CallStack (from HasCallStack):
 
 ### Concrete Judgments
 
+We now append our abstract syntax GF file `Arith.gf` with our first concrete GF syntax, some pigdin English way of saying our same expression above, namely `the product of the sum of 3 and 4 and 5`. Note that `Mul` and `Add` both being binary operators preclude this reading : `product of (the sum of 3 and 4 and 5)` in GF, despite the fact that it seems the more natural English interpretation and it doesn't admit a proper semantic reading.
 
-We have to
+Reflecting the tree around the `Mul` root, `Mul (EInt 5) (Add (EInt 3) (EInt 4))`, we get a reading where the 'natural interpretation' matches the actual syntax :`the product of 5 and the sum of 3 and 4`. Let's look at the concrete syntax which allow us to simply specify the linearization rules corresponding to the above `fun` function judgements. 
+
+Our concrete syntax header says that `ArithEng1` is constrained by the fact that the concrete syntaxes must share the same prefix with the abstract syntax, and extend it with one or more characters, i.e. `Arith+.gf`.
+
+```haskell
+concrete ArithEng1 of Arith = {
+...
+}
+```
+
+We now introduce the two concrete syntax judgments which compliment those above, namely :
+
+* `cat` is dual to `lincat`
+* `fun` is dual to `lin`
+
+Here is the first pass at an English linearization :
+
+```haskell
+lincat
+  Exp = Str ;
+
+lin
+  Add e1 e2 = "the sum of" ++ e1 ++ "and" ++ e2 ;
+  Mul e1 e2 = "the product of" ++ e1 ++ "and" ++ e2 ;
+  EInt i = i.s ;
+```
+
+The `lincat` judgement says that `Exp` category is given a linearization type `Str`, which means that any expression is just evaluated to a string. There are more expressive linearization types, records and tables, or products and coproducts in the mathematician's lingo. For instance, `EInt i = i.s` that we project the s field from the integer i (records are indexed by numbers but rather by names in PLs). We defer a more extended discussion of linearization types for later examples where they are not just useful but necessary, producing grammars more expressive than CFGs called Parallel Multiple Context Free Grammars (PMCFGs).
+
+The linearization of the `Add` function takes two arguements, `e1` and `e2` which must necessarily evaluate to strings, and produces a string. Strings in GF are denoted with double quotes `"my string"` and concatenation with `++`. This resulting string, `"the sum of" ++ e1 ++ "and" ++ e2` is the concatenation of `"the sum of"`, the evaluated string `e1`, `"and"`, and the string of a linearized `e2`.  The linearization of `EInt` is almost an identity function, except that the primitive Integer's are strings embedded in a record for scalability purposes. 
+
+Given a `fun` judgement 
+
+  $$f {:} C_0 \rightarrow C_1 \rightarrow ... \rightarrow C_n$$
+
+in the `abstract` file, the GF user provides a corresping `lin` judgement of the form
+
+  $$f \: c_0 \: c_1 \: ... \: c_n \: {=} \: t_0 \: \texttt{++} \: t_1 \: \texttt{++} \: ... \: \texttt{++} \: t_m $$
+
+in the `concrete` file. Each $$c_i$$ must have the linearization type given in the `lincat` of $$C_i$$ , e.g. if `lincat C_i = T ;` then `c_i : T`. 
+
+We step through the example above to see how the linearization recursively evaluates, noting that this may not be the actual reduction order GF internally performs :
+
+```haskell
+linearize (Mul (Add (EInt 3) (EInt 4)) (EInt 5))
+->* "the product of" ++ linearize (Add (EInt 3) (EInt 4)) ++ "and" ++ linearize (EInt 5)
+->* "the product of" ++ ("the sum of" ++ (EInt 3) ++ (EInt 4)) ++ "and" ++ ({ s = "5"} . s)
+->* "the product of" ++ ("the sum of" ++ ({ s = "3"} . s) ++ ({ s = "4"} . s)) ++ "and" ++ "5"
+->* "the product of" ++ ("the sum of" ++ "3" ++ "and" ++ "4") ++ "and" ++ "5"
+->* "the product of" ++ ("the sum of" ++ "3" ++ "and" ++ "4") ++ "and" ++ "5"
+->* "product of the sum of 3 and 4 and 5"
+```
+
 
 
 The most important properties of the functions
