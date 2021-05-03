@@ -91,6 +91,8 @@ Mathematics^English iI -- Something about
 
   because Chomsky may something like "I was stoked" and Partee may only say something analogous "I was really excited" or whatever the individual nuances come with how speakers say what they mean with different surface syntax, and also
 
+Given a set of categories,  we define the functions \phi : (c_1, ..., c_n) -> c_t over the categories which will serve as the constructors of our ASTs. The categories and functions are denoted in GF with the cat and fun judgment.
+
 ## Some preliminary observations and considerations
 
 There are many ways to skin a cat. While in some sense GF offers the user a limited palette with which to paint, she nonetheless has quite a bit of flexibility in her decision making when designing a GF grammar for a specific domain or application. These decisions are not binary, but rest in the spectrum of of considerations varying between :
@@ -129,7 +131,7 @@ For the logician these judgments may well be interesting because their may be lo
 * $$t$$ is a term of type $$T$$
 * $$t$$ and $$t'$$ are equal terms of type $$T$$
 
-We succinctly present these in a mathematical notation where Frege's turnstile, $$\vdash$$, denotes a judgment : 
+We succinctly present these in a mathematical notation where Frege's turnstile, $$\vdash$$, denotes a judgment :
 
 $$\vdash T \; {\rm type}$$
 
@@ -143,23 +145,54 @@ These judgments become much more interesting when we add the ability for them to
 
 $$x {:} \R \vdash \sin x {:} \R$$
 
-One reason why hypothetical judgments are so interesting is we can devise rules which allow us to translate from the metalanguage to the object language using lambda expressions. These play the role of a function in mathematics and implication in logic. This comes out in the following introduction rule : 
+One reason why hypothetical judgments are so interesting is we can devise rules which allow us to translate from the metalanguage to the object language using lambda expressions. These play the role of a function in mathematics and implication in logic. This comes out in the following introduction rule :
 
 $$
 \frac{\Gamma, x {:} A \vdash b {:} B}
 {\Gamma \vdash \lambda x. b {:}  A \rightarrow B}
 $$
 
-Using this rule, we now see a typical non-hypotetical judgment from real analysis,
+Using this rule, we now see a typical judgment, typical in a field like from real analysis,
 
-$$x {:} \R \vdash \lambda x. \sin x {:} \R \rightarrow \R$$
+$$\vdash \lambda x. \sin x {:} \R \rightarrow \R$$
+
+Equality :
+
+Mathematicians denote this judgement
+
+$$
+\begin{align}
+  f {:} \R &\rightarrow \R\\
+  x &\mapsto \sin ( x )
+\end{align}
+$$
 
 ### Abstract Judgments
 
+The core syntax of GF is quite simple. The abstract syntax specification, denoted mathematically above as _, and in GF as `Arith.gf` is given by :
 
 
 ```haskell
-cat Exp ; Var ;
+abstract Arith = {
+...
+}
+```
+
+**.gf :** All GF files end with the `.gf` file extension. More detailed information about abstract, concrete, modules, etc. relevant for GF is specified internal to a `*.gf` file
+{: .notice--info}
+
+The abstract specification is simple, and reveals GF's power and elegance. The two primary abstract judgments are :
+
+1. `cat` : denoting a syntactic category
+2. `fun` : denoting a n-ary function over categories. This is essentially a labeled context-free rewrite rule with (non-)terminal string information suppressed
+
+**Additional Judgments:** While there are more advanced abstract judgments, for instance `def` allows one to incorporate semantic information, discussion of these will be deferred to other resources.
+{: .notice--info}
+
+These judgments have different interpretations in the natural and formal language settings. Let's see the spine of the `Arith` language, where we merely want to be able to write expressions like `( 3 + 4 ) * 5` in a myriad of concrete syntaxes. 
+
+```haskell
+cat Exp ; 
 
 fun
   Add  : Exp -> Exp -> Exp ;
@@ -167,11 +200,89 @@ fun
   EInt : Int -> Exp ;
 ```
 
+To represent this abstractly, we merely have two binary operators, labeled `Add` and `Mul`, whose intended interpretation is just the operator names, and the `EInt` function which coerces a predefined `Int`, natively supported numerical strings `"0","1","2",...` into arithmetic expressions. We can now generate our first abstract syntax tree, corresponding to the above expression, `Mul (Add (EInt 3) (EInt 4)) (EInt 5)`, more readable perhaps with the tree structure expanded : 
+
+```haskell
+Mul 
+  Add 
+    EInt 3
+    EInt 4 
+  EInt 5
+```
+
+The trees nodes are just the function names, and the leaves, while denoted above as numbers, are actually function names for the built-in numeric strings which happen to be linearized to the same piece of syntax, i.e. `linearize 3 == 3`, where the left-hand 3 has type `Int` and the right-hand 3 has type `Str`. 
+
+**Builtin Categories :** GF has support for very few, but important categories. These are `Int`, `Float`, and `String`.  It is my contention and that adding user defined builtin categories would greatly ease the burden of work for people interested in using GF to model programming languages, because `String` makes the grammars notoriously ambiguous.
+{: .notice--info}
+
+In computer science terms, to judge `Foo` to be a given category `cat Foo;` corresponds to the definition of a given Algebraic Datatypes (ADTs) in Haskell, or inductive definitions in Agda, whereas the function judgments `fun` correspond to the various constructors. These connections become explicit in the PGF embedding of GF into Haskell, but examining the Haskell code below makes one suspect their is some equivalence lurking in the corner: 
+
+```haskell
+data Exp = Add Exp Exp | Mul Exp Exp | EInt Int
+```
+
+In linguistics we can interpret the judgments via alternatively simple and standard examples:
+
+1. `cat` : these could be syntactic categories like Common Nouns `CN`, Noun Phrases `NP` , and determiners `Det`
+2. `fun` : give us ways of combining words or phrases into more complex syntactic units
+
+For instance, if 
+
+```haskell
+fun 
+  carCN  : CN ;
+  theDet : Det ;
+  DetCN   : Det -> CN -> NP ;
+```
+
+Then one can form a tree `DetCN theDet carCN` which should linearize to `"the car"` in English, `bilen` in Swedish, and `imoto` in Zulu once we have implemented concrete syntax linearizations for these respective languages, which we will now do.
+
+While there was an equivalence suggested Haskell ADTs should be careful not to treat these as the same as the GF judgments. Indeed, the linguistic interpretation breaks this analogy, because linguistic categories aren't stable mathematical objects in the sense that they evolved and changed during the evolution of language, and will continue to do so. Since GF is primarily concerned with parsing and linearization of languages, the full power of inductive definitions in Agda, for instance, doesn't seem like a particularly natural space to study and model natural language phenomena.
+
+
+#### Arith.gf
+
+Below we capitulate, for completeness, the whole `Arith.gf` file with all the pieces from above glued together, which, the reader should start to play with. 
+
+```haskell
+abstract Arith = {
+
+flags startcat = Exp ;
+
+-- a judgement which says "Exp is a category"
+cat
+  Exp ;
+
+fun
+  Add  : Exp -> Exp -> Exp ; -- "+"
+  Mul  : Exp -> Exp -> Exp ; -- "*"
+  EInt : Int -> Exp ; -- "33"
+
+}
+```
+
+The astute reader will recognize some code which has not yet been described.  The comments, delegated with `--`, can have their own lines or be given at the end of a piece of code. It is good practice to give example linearizations as comments in the abstract syntax file, so that it can be read in a stand-alone way. 
+
+The `flags startcat = Exp ;` line is not a judgment, but piece of metadata for the compiler so that it knows, when generating random ASTs, to include a function at the root of the AST with codomain `Exp`. If I hadn't included `flags startcat = *some cat*` , and ran `gr` in the gf shell, we would get the following error, which can be incredibly confusing but simple bug to fix if you don't know what to look for!
+
+```haskell
+Category S is not in scope
+CallStack (from HasCallStack):
+  error, called at src/compiler/GF/Command/Commands.hs:881:38 in gf-3.10.4-BNI84g7Cbh1LvYlghrRUOG:GF.Command.Commands
+```
+
+### Concrete Judgments
+
+
 We have to
 
-Given a set of categories,  we define the functions \phi : (c_1, ..., c_n) -> c_t over the categories which will serve as the constructors of our ASTs. The categories and functions are denoted in GF with the cat and fun judgment.
 
 The most important properties of the functions
+
+
+#### Extending `Arith.gf` with Variables and Propositions
+
+Now that we have our expressions, let's suppose we want to extend 
 
 # Appendix : Historical Developments
 
