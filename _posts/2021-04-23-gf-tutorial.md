@@ -108,7 +108,7 @@ Many answers to where on the spectrum a Grammar lies will only become clear a po
 
 When designing a GF grammar for a given application, the most immediate question that will come to mind is separation of concerns as regards the spectrum of
 
-[Abstract <-> Concrete] sytnax
+[Abstract <-> Concrete] syntax
 
 Have your cake and eat it ?
 
@@ -167,7 +167,7 @@ $$
 \end{align}
 $$
 
-### Abstract Judgments
+## Abstract Judgments
 
 The core syntax of GF is quite simple. The abstract syntax specification, denoted mathematically above as _, and in GF as `Arith.gf` is given by :
 
@@ -240,7 +240,7 @@ Then one can form a tree `DetCN theDet carCN` which should linearize to `"the ca
 While there was an equivalence suggested Haskell ADTs should be careful not to treat these as the same as the GF judgments. Indeed, the linguistic interpretation breaks this analogy, because linguistic categories aren't stable mathematical objects in the sense that they evolved and changed during the evolution of language, and will continue to do so. Since GF is primarily concerned with parsing and linearization of languages, the full power of inductive definitions in Agda, for instance, doesn't seem like a particularly natural space to study and model natural language phenomena.
 
 
-#### Arith.gf
+### Arith.gf
 
 Below we recapitulate, for completeness, the whole `Arith.gf` file with all the pieces from above glued together, which, the reader should start to play with. 
 
@@ -271,11 +271,11 @@ CallStack (from HasCallStack):
   error, called at src/compiler/GF/Command/Commands.hs:881:38 in gf-3.10.4-BNI84g7Cbh1LvYlghrRUOG:GF.Command.Commands
 ```
 
-### Concrete Judgments
+## Concrete Judgments
 
 We now append our abstract syntax GF file `Arith.gf` with our first concrete GF syntax, some pigdin English way of saying our same expression above, namely `the product of the sum of 3 and 4 and 5`. Note that `Mul` and `Add` both being binary operators preclude this reading : `product of (the sum of 3 and 4 and 5)` in GF, despite the fact that it seems the more natural English interpretation and it doesn't admit a proper semantic reading.
 
-Reflecting the tree around the `Mul` root, `Mul (EInt 5) (Add (EInt 3) (EInt 4))`, we get a reading where the 'natural interpretation' matches the actual syntax :`the product of 5 and the sum of 3 and 4`. Let's look at the concrete syntax which allow us to simply specify the linearization rules corresponding to the above `fun` function judgements. 
+Reflecting the tree around the `Mul` root, `Mul (EInt 5) (Add (EInt 3) (EInt 4))`, we get a reading where the 'natural interpretation' matches the actual syntax :`the product of 5 and the sum of 3 and 4`. Let's look at the concrete syntax which allow us to simply specify the linearization rules corresponding to the above `fun` function judgments. 
 
 Our concrete syntax header says that `ArithEng1` is constrained by the fact that the concrete syntaxes must share the same prefix with the abstract syntax, and extend it with one or more characters, i.e. `Arith+.gf`.
 
@@ -304,19 +304,19 @@ lin
 
 The `lincat` judgement says that `Exp` category is given a linearization type `Str`, which means that any expression is just evaluated to a string. There are more expressive linearization types, records and tables, or products and coproducts in the mathematician's lingo. For instance, `EInt i = i.s` that we project the s field from the integer i (records are indexed by numbers but rather by names in PLs). We defer a more extended discussion of linearization types for later examples where they are not just useful but necessary, producing grammars more expressive than CFGs called Parallel Multiple Context Free Grammars (PMCFGs).
 
-The linearization of the `Add` function takes two arguements, `e1` and `e2` which must necessarily evaluate to strings, and produces a string. Strings in GF are denoted with double quotes `"my string"` and concatenation with `++`. This resulting string, `"the sum of" ++ e1 ++ "and" ++ e2` is the concatenation of `"the sum of"`, the evaluated string `e1`, `"and"`, and the string of a linearized `e2`.  The linearization of `EInt` is almost an identity function, except that the primitive Integer's are strings embedded in a record for scalability purposes. 
+The linearization of the `Add` function takes two arguments, `e1` and `e2` which must necessarily evaluate to strings, and produces a string. Strings in GF are denoted with double quotes `"my string"` and concatenation with `++`. This resulting string, `"the sum of" ++ e1 ++ "and" ++ e2` is the concatenation of `"the sum of"`, the evaluated string `e1`, `"and"`, and the string of a linearized `e2`.  The linearization of `EInt` is almost an identity function, except that the primitive Integer's are strings embedded in a record for scalability purposes. 
 
-Given a `fun` judgement 
+Here is the relationship between `fun` and `lin` from a slightly higher vantage point. Given a `fun` judgement 
 
   $$f {:} C_0 \rightarrow C_1 \rightarrow ... \rightarrow C_n$$
 
-in the `abstract` file, the GF user provides a corresping `lin` judgement of the form
+in the `abstract` file, the GF user provides a corresponding `lin` judgement of the form
 
   $$f \: c_0 \: c_1 \: ... \: c_n \: {=} \: t_0 \: \texttt{++} \: t_1 \: \texttt{++} \: ... \: \texttt{++} \: t_m $$
 
 in the `concrete` file. Each $$c_i$$ must have the linearization type given in the `lincat` of $$C_i$$ , e.g. if `lincat C_i = T ;` then `c_i : T`. 
 
-We step through the example above to see how the linearization recursively evaluates, noting that this may not be the actual reduction order GF internally performs :
+We step through the example above to see how the linearization recursively evaluates, noting that this may not be the actual reduction order GF internally performs. The relation `->*` informally used but not defined here expresses the step function after zero or more steps of evaluating an expression. This is the reflexive transitive closure of the single step relation `->` familiar in operational semantics.
 
 ```haskell
 linearize (Mul (Add (EInt 3) (EInt 4)) (EInt 5))
@@ -325,17 +325,82 @@ linearize (Mul (Add (EInt 3) (EInt 4)) (EInt 5))
 ->* "the product of" ++ ("the sum of" ++ ({ s = "3"} . s) ++ ({ s = "4"} . s)) ++ "and" ++ "5"
 ->* "the product of" ++ ("the sum of" ++ "3" ++ "and" ++ "4") ++ "and" ++ "5"
 ->* "the product of" ++ ("the sum of" ++ "3" ++ "and" ++ "4") ++ "and" ++ "5"
-->* "product of the sum of 3 and 4 and 5"
+->* "the product of the sum of 3 and 4 and 5"
+```
+
+The PMCFG class of languages is still quite tame when compared with, for instance, Turing complete languages. Thus, the `abstract` and `concrete` coupling tight, the evaluation is quite simple, and the programs tend to write themselves once the correct types are chosen. This is not to say GF programming is easier than in other languages, because often there are unforeseen constraints that the programmer must get used to, limiting the palette available when writing code. These constraints allow for fast parsing, but greatly limit the types of programs one often thinks of writing. We touch upon this in a [previous section](##some-preliminary-observations-and-considerations). 
+
+Now that the basics of GF have been described, we will augment our grammar so that it becomes slightly more interesting, introduce a second `concrete` syntax, and show how to run these in the GF shell in order to translate between our two languages.
+
+## The GF Shell
+
+So now that we have a GF `abstract` and `concrete` syntax pair, one needs to test the grammars. 
+
+Once GF is [installed](https://www.grammaticalframework.org/download/index-3.10.html), one can open both the `abstract` and `concrete` with the `gf` shell command applied to the `concrete` syntax, assuming the `abstract` syntax is in the same directory :
+
+```
+$ gf ArithEng1.gf
+```
+
+I'll forego describing many important details and commands, please refer to the [official shell reference](https://www.grammaticalframework.org/doc/gf-shell-reference.html) and Inari Listenmaa's post on [tips and gotchas](https://inariksit.github.io/gf/2018/08/28/gf-gotchas.html) for a more nuanced take than I give here. 
+
+The `ls` of the gf repl is `gr`. What does `gr` do?  Lets ask gf: 
+
+```haskell
+Arith> help gr
+gr, generate_random
+generate random trees in the current abstract syntax
 ```
 
 
 
-The most important properties of the functions
+
+```haskell
+Arith> gr -tr | l
+Add (Mul (Mul (EInt 999) (EInt 999)) (Add (EInt 999) (EInt 999))) (Add (Add (EInt 999) (EInt 999)) (Add (EInt 999) (EInt 999)))
+
+the sum of the product of the product of 999 and 999 and the sum of 999 and 999 and the sum of the sum of 999 and 999 and the sum of 999 and 999
+```
 
 
-#### Extending `Arith.gf` with Variables and Propositions
 
-Now that we have our expressions, let's suppose we want to extend 
+### Exercises
+
+**Exercise 1 :** Extend the the `Arith` grammar with variables. Specifically, modify both `Arith.gf` and `ArithEng1.gf` arithmetic with two additional unique variables, `x` and `y`, such that the string `product of x and y` parses uniquely 
+{: .notice--danger}
+
+**Exercise 2 :** Write concrete syntax in your favorite language, `ArithFaveLang.gf`
+{: .notice--danger}
+
+**Exercise 3 :** Write second English concrete syntax, `ArithEng2.gf`, that mimics how children learn arithmetic, i.e. "3 plus 4" and "5 times 5". Observe the ambiguous parses in the gf shell. Substitute `plus` with `+`, `times` with `*`, and remedy the ambiguity with parentheses
+{: .notice--danger}
+
+Observe that parentheses are ugly and unnecessary: sophisticated folks use fixity conventions.
+
+**Thought Experiment :** How would one go about remedying the ugly parentheses, at either the abstract or concrete level? Try to do it!
+{: .notice--warning}
+
+## Basic Extensions of Arith
+
+### Adding Variables
+
+
+
+We can now 
+
+
+
+### Parsing
+
+### Translation
+
+## Resource Grammar Library
+
+### Adding Swedish : `ArithSwe.gf`
+
+## Lists in GF
+
+## Embedding GF in Haskell
 
 # Appendix : Historical Developments
 
@@ -344,3 +409,4 @@ Prehistory :
 CFGs, Chomsky Hierarchy, BNF
 
 Natural Language Semantics & Martin Lof Type Theory :
+
