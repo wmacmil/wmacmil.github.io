@@ -230,12 +230,12 @@ For instance, if
 
 ```haskell
 fun 
-  carCN  : CN ;
-  theDet : Det ;
+  Car_CN  : CN ;
+  The_Det : Det ;
   DetCN   : Det -> CN -> NP ;
 ```
 
-Then one can form a tree `DetCN theDet carCN` which should linearize to `"the car"` in English, `bilen` in Swedish, and `imoto` in Zulu once we have implemented concrete syntax linearizations for these respective languages, which we will now do.
+Then one can form a tree `DetCN The_Det Car_CN` which should linearize to `"the car"` in English, `bilen` in Swedish, and `imoto` in Zulu once we have implemented concrete syntax linearizations for these respective languages, which we will now do.
 
 While there was an equivalence suggested Haskell ADTs should be careful not to treat these as the same as the GF judgments. Indeed, the linguistic interpretation breaks this analogy, because linguistic categories aren't stable mathematical objects in the sense that they evolved and changed during the evolution of language, and will continue to do so. Since GF is primarily concerned with parsing and linearization of languages, the full power of inductive definitions in Agda, for instance, doesn't seem like a particularly natural space to study and model natural language phenomena.
 
@@ -344,16 +344,21 @@ $ gf ArithEng1.gf
 
 I'll forego describing many important details and commands, please refer to the [official shell reference](https://www.grammaticalframework.org/doc/gf-shell-reference.html) and Inari Listenmaa's post on [tips and gotchas](https://inariksit.github.io/gf/2018/08/28/gf-gotchas.html) for a more nuanced take than I give here. 
 
-The `ls` of the gf repl is `gr`. What does `gr` do?  Lets ask gf: 
+The `ls` of the gf repl is `gr`. What does `gr` do?  Lets try it, as well as ask gf what it does: 
 
 ```haskell
+Arith> gr 
+Add (EInt 999) (Mul (Add (EInt 999) (EInt 999)) (EInt 999))
+
+0 msec
 Arith> help gr
 gr, generate_random
 generate random trees in the current abstract syntax
 ```
 
+We see that the tree generated isn't random - `999` is used exclusively, and obviously if the trees were actually random, the probability of such a small tree might be exceedingly low. The depth of the trees is cut-off, which can be modified with the `-depth=n` flag for some number n, and the predefined categories, `Int` in this case, are annoyingly restricted. Nonetheless, `gr` is a quick first pass at testing your grammar. 
 
-
+Listed in the repl, but not shown here, are (some of the) additional flags that `gr` command can take. The `help` command reveals other possible commands, included is the linearization, the `l` command. We use the pipe `|` to compose gf functions, and the `-tr` to trace the output of `gr` prior to being piped :
 
 ```haskell
 Arith> gr -tr | l
@@ -362,11 +367,29 @@ Add (Mul (Mul (EInt 999) (EInt 999)) (Add (EInt 999) (EInt 999))) (Add (Add (EIn
 the sum of the product of the product of 999 and 999 and the sum of 999 and 999 and the sum of the sum of 999 and 999 and the sum of 999 and 999
 ```
 
+Clearly this expression is to too complex to say out loud and retain a semblance of meaning. Indeed, most grammatical sentences aren't meaningful. Dealing with semantics in GF is advanced, and we won't touch that here. Nonetheless, our grammar seems to be up and running. 
 
+Let's try the sanity check referenced at the beginning of this post, namely, observe that $$linearize \circ parse$$ preserves an AST, and vice versa, $$parse \circ linearize$$ preserves a string. Parse is denoted `p`.
+
+```haskell
+Arith> gr -tr | l -tr | p -tr | l
+Add (EInt 999) (Mul (Add (EInt 999) (EInt 999)) (Add (EInt 999) (EInt 999)))
+
+the sum of 999 and the product of the sum of 999 and 999 and the sum of 999 and 999
+
+Add (EInt 999) (Mul (Add (EInt 999) (EInt 999)) (Add (EInt 999) (EInt 999)))
+
+the sum of 999 and the product of the sum of 999 and 999 and the sum of 999 and 999
+```
+
+Phew, that's a relief. Note that this is an unambiguous grammar, so when I said 'preserves', I only meant it up to some notion of relatedness. This relation is indeed equality for unambiguous grammars.  Unambiguous grammars are degenerate cases, however, so I expect this is the last time you'll see such tame behavior when the GF parser is involved. Now that all the main ingredients have been introduced, the reader
 
 ### Exercises
 
-**Exercise 1 :** Extend the the `Arith` grammar with variables. Specifically, modify both `Arith.gf` and `ArithEng1.gf` arithmetic with two additional unique variables, `x` and `y`, such that the string `product of x and y` parses uniquely 
+**Exercise 1.1 :** Extend the `Arith` grammar with variables. Specifically, modify both `Arith.gf` and `ArithEng1.gf` arithmetic with two additional unique variables, `x` and `y`, such that the string `product of x and y` parses uniquely 
+{: .notice--danger}
+
+**Exercise 1.2 :** Extend *Exercise 1.1* with unary predicates, so that `3 is prime` and `x is odd` parse. Then include binary predicates, so that `3 equals 3` parses.
 {: .notice--danger}
 
 **Exercise 2 :** Write concrete syntax in your favorite language, `ArithFaveLang.gf`
@@ -375,10 +398,100 @@ the sum of the product of the product of 999 and 999 and the sum of 999 and 999 
 **Exercise 3 :** Write second English concrete syntax, `ArithEng2.gf`, that mimics how children learn arithmetic, i.e. "3 plus 4" and "5 times 5". Observe the ambiguous parses in the gf shell. Substitute `plus` with `+`, `times` with `*`, and remedy the ambiguity with parentheses
 {: .notice--danger}
 
-Observe that parentheses are ugly and unnecessary: sophisticated folks use fixity conventions.
-
-**Thought Experiment :** How would one go about remedying the ugly parentheses, at either the abstract or concrete level? Try to do it!
+**Thought Experiment :** Observe that parentheses are ugly and unnecessary: sophisticated folks use fixity conventions. How would one go about remedying the ugly parentheses, at either the abstract or concrete level? Try to do it!
 {: .notice--warning}
+
+### Solutions
+
+*Exercise 1.1*
+
+This warm-up exercise is to get use to GF syntax. Add a new category `Var` for variables, two lexical variable names `VarX` and `VarY`, and a coercion function (which won't show up on the linearization) from variables to expressions. We then augment the `concrete` syntax which is quite trivial.
+
+```haskell
+-- Add the following between `{}` in `Arith.gf`
+cat Var ; 
+fun
+  VExp : Var -> Exp ;
+  VarX : Var ;
+  VarY : Var ;
+```
+```haskell
+-- Add the following between `{}` in `ArithEng1.gf`
+lincat Var = Str ;
+lin
+  VExp v = v ;
+  VarX = "x" ;
+  VarY = "y" ;
+```
+
+*Exercise 1.2*
+
+This is a similar augmentation as was performed above. 
+
+```haskell
+-- Add the following between `{}` in `Arith.gf`
+flags startcat = Prop ;
+
+cat Prop ; 
+
+fun
+  Odd   : Exp -> Prop ;
+  Prime : Exp -> Prop ;
+  Equal : Exp -> Exp -> Prop ;
+```
+```haskell
+-- Add the following between `{}` in `ArithEng1.gf`
+lincat Prop = Str ;
+lin
+  Odd e = e ++ "is odd";
+  Prime e = e ++ "is prime";
+  Equal e1 e2 = e1 ++ "equals" ++ e2 ;
+```
+The main point is to recognize that we also need to modify the `startcat` flag to `Prop` so that `gr` generates numeric predicates rather than just expressions. One may also use the category flag to generate trees of any expression `gr -cat=Exp`.
+
+*Exercise 2*
+
+*Exercise 3* 
+
+We simply change the strings that get linearized to what follows :
+
+```haskell
+lin
+  Add e1 e2 = e1 ++ "plus" ++ e2 ; 
+  Mul e1 e2 = e1 ++ "times" ++ e2 ;
+```
+
+With these minor modifications in place, we make the follow observation in the GF shell, noting that for a given number of binary operators in an expression, we get the [Catalan number](https://en.wikipedia.org/wiki/Catalan_number) of parses!
+
+```haskell
+Arith> gr -tr | l -tr | p -tr | l
+Add (Mul (VExp VarX) (Mul (EInt 999) (VExp VarX))) (EInt 999)
+
+x times 999 times x plus 999
+
+Add (Mul (VExp VarX) (Mul (EInt 999) (VExp VarX))) (EInt 999)
+Add (Mul (Mul (VExp VarX) (EInt 999)) (VExp VarX)) (EInt 999)
+Mul (VExp VarX) (Add (Mul (EInt 999) (VExp VarX)) (EInt 999))
+Mul (VExp VarX) (Mul (EInt 999) (Add (VExp VarX) (EInt 999)))
+Mul (Mul (VExp VarX) (EInt 999)) (Add (VExp VarX) (EInt 999))
+
+x times 999 times x plus 999
+x times 999 times x plus 999
+x times 999 times x plus 999
+x times 999 times x plus 999
+x times 999 times x plus 999
+```
+
+```haskell
+Arith> gr -tr | l -tr | p -tr
+Add (EInt 999) (Mul (VExp VarY) (Mul (EInt 999) (EInt 999)))
+
+( 999 + ( y * ( 999 * 999 ) ) )
+
+Add (EInt 999) (Mul (VExp VarY) (Mul (EInt 999) (EInt 999)))
+```
+
+
 
 ## Basic Extensions of Arith
 
